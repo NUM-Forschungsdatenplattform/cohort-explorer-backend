@@ -100,6 +100,7 @@ zars:
 num:
   url: http://localhost:8180
   locale: en
+  operator: "Name of the Organization"
   # if true, a second database is configured for attachments - check configs for numportal-attachment
   enableAttachmentDatabase: true
 

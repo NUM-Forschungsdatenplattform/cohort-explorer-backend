@@ -6,8 +6,6 @@ import org.highmed.numportal.service.notification.dto.Notification;
 
 import lombok.Builder;
 
-import java.time.Year;
-
 public class AccountApprovalNotification extends Notification {
 
   private static final String ACCOUNT_APPROVAL_SUBJECT = "mail.user-account-approval.subject";
@@ -28,15 +26,15 @@ public class AccountApprovalNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         ACCOUNT_APPROVAL_BODY,
         recipientFirstName,
         recipientLastName,
         adminEmail,
         adminFullName,
-        copyright,
+        signOff,
         url);
   }
 

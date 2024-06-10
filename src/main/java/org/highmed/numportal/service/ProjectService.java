@@ -604,8 +604,8 @@ public class ProjectService {
       var approver = userService.getUserById(approverUserId, false);
 
       if (isTransitionToChangeRequest(oldStatus, newStatus)) {
-        ProjectStatusChangeRequestNotification notification = new ProjectStatusChangeRequestNotification(coordinator.getEmail(),
-            coordinator.getFirstName(),
+        ProjectStatusChangeRequestNotification notification = new ProjectStatusChangeRequestNotification(
+            coordinator.getEmail(), coordinator.getFirstName(),
             coordinator.getLastName(), approver.getFirstName(), approver.getLastName(),
             project.getName(), newStatus, oldStatus, project.getId(), approver.getEmail());
         notifications.add(notification);

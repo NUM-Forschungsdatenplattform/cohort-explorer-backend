@@ -5,8 +5,6 @@ import org.highmed.numportal.service.email.MessageSourceWrapper;
 
 import lombok.Builder;
 
-import java.time.Year;
-
 public class ProjectStatusChangeNotification extends Notification {
 
   protected static final String PROJECT_STATUS_CHANGE_BODY_KEY = "mail.project-status-change.body";
@@ -50,8 +48,8 @@ public class ProjectStatusChangeNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         PROJECT_STATUS_CHANGE_BODY_KEY,
         recipientFirstName,
@@ -60,7 +58,7 @@ public class ProjectStatusChangeNotification extends Notification {
         projectStatus,
         approverFirstName,
         approverLastName,
-        copyright,
+        signOff,
         url,
         getProjectPreviewUrl(url, projectId),
         oldProjectStatus,

@@ -4,8 +4,6 @@ import org.highmed.numportal.service.email.MessageSourceWrapper;
 
 import lombok.Builder;
 
-import java.time.Year;
-
 public class ProjectStartNotification extends Notification {
 
   private static final String PROJECT_START_SUBJECT_KEY = "mail.project-start.subject";
@@ -41,8 +39,8 @@ public class ProjectStartNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         PROJECT_START_BODY_KEY,
         recipientFirstName,
@@ -50,7 +48,7 @@ public class ProjectStartNotification extends Notification {
         coordinatorFirstName,
         coordinatorLastName,
         projectTitle,
-        copyright,
+        signOff,
         url,
         getProjectExplorerUrl(url, projectId));
   }

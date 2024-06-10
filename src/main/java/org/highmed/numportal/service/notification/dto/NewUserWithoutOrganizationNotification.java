@@ -4,8 +4,6 @@ import org.highmed.numportal.service.email.MessageSourceWrapper;
 
 import lombok.Builder;
 
-import java.time.Year;
-
 public class NewUserWithoutOrganizationNotification extends Notification {
 
   private static final String SUBJECT_KEY = "mail.user-without-organization.subject";
@@ -38,8 +36,8 @@ public class NewUserWithoutOrganizationNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         BODY_KEY,
         recipientFirstName,
@@ -47,7 +45,7 @@ public class NewUserWithoutOrganizationNotification extends Notification {
         userFirstName,
         userLastName,
         userEmail,
-        copyright,
+        signOff,
         url);
   }
 }

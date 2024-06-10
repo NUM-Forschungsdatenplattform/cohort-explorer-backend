@@ -8,14 +8,13 @@ import lombok.Builder;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.Year;
 import java.util.HashMap;
 import java.util.List;
 
 public class RolesUpdateNotification extends Notification {
 
   private static final String USER_ROLES_UPDATE_SUBJECT_KEY = "mail.user-roles-update.subject";
-  private static final String USER_ROLES_UPDATE_BODY_KEY = "mail.user-roles.body";
+  private static final String USER_ROLES_UPDATE_BODY_KEY = "mail.user-roles-update.body";
 
   private static final String OPEN_LIST_HTML_TAG = "<ul>";
   private static final String CLOSE_LIST_HTML_TAG = "</ul>";
@@ -61,14 +60,13 @@ public class RolesUpdateNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
-
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         USER_ROLES_UPDATE_BODY_KEY,
         recipientFirstName,
         recipientLastName,
-        copyright,
+        signOff,
         url,
         adminFullName,
         adminEmail,

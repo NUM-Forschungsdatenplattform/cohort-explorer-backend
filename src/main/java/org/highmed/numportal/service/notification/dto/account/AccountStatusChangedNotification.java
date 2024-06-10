@@ -5,12 +5,10 @@ import org.highmed.numportal.service.notification.dto.Notification;
 
 import lombok.Builder;
 
-import java.time.Year;
-
 public class AccountStatusChangedNotification extends Notification {
 
   private static final String ACCOUNT_ACTIVE_SUBJECT = "mail.user-account-active.subject";
-  private static final String ACCOUNT_ACTIVE_BODY = "mail.user-account-active-body";
+  private static final String ACCOUNT_ACTIVE_BODY = "mail.user-account-active.body";
   private static final String ACCOUNT_INACTIVE_SUBJECT = "mail.user-account-inactive.subject";
   private static final String ACCOUNT_INACTIVE_BODY = "mail.user-account-inactive.body";
   private final Boolean userCurrentStatus;
@@ -32,8 +30,8 @@ public class AccountStatusChangedNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     String messageKey;
     if (Boolean.TRUE.equals(userCurrentStatus)) {
       messageKey = ACCOUNT_ACTIVE_BODY;
@@ -47,7 +45,8 @@ public class AccountStatusChangedNotification extends Notification {
         url,
         adminEmail,
         adminFullName,
-        copyright);
+        signOff
+    );
   }
 
   @Override

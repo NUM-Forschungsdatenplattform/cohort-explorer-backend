@@ -4,7 +4,6 @@ import org.highmed.numportal.service.email.MessageSourceWrapper;
 
 import lombok.Builder;
 
-import java.time.Year;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,8 +50,8 @@ public class NewUserNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         NEW_USER_BODY_KEY,
         recipientFirstName,
@@ -60,7 +59,7 @@ public class NewUserNotification extends Notification {
         newUserFirstName,
         newUserLastName,
         newUserEmail,
-        copyright,
+        signOff,
         url,
         getTranslatedRequestedRoles(requestedRoles, messageSource), department, notes);
   }
