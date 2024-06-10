@@ -170,6 +170,7 @@ num:
   userManualUrl:
     DE: 'https://num-portal-webapp.readthedocs.io/de/latest/'
     EN: 'https://num-portal-webapp.readthedocs.io/en/latest/'
+  operator: ""
   # if true a second database is configured for attachments - check configs for numportal-attachment
   enableAttachmentDatabase: false
   # default PDF file size is 10 MB. 1024*1024*10

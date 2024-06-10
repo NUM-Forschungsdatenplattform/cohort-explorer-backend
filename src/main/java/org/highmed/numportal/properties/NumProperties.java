@@ -14,5 +14,5 @@ public class NumProperties {
   private String locale;
   private String url;
   private Map<String, String> userManualUrl;
-
+  private String operator;
 }

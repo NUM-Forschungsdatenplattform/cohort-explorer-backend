@@ -11,7 +11,7 @@ import java.net.URL;
 @Slf4j
 public abstract class Notification {
 
-  protected static final String COPYRIGHT_KEY = "num.copyright";
+  protected static final String SIGN_OFF_KEY = "mail.sign-off";
 
   protected static final String PROJECT_PREVIEW_MODE = "/editor?mode=preview";
 
@@ -30,7 +30,7 @@ public abstract class Notification {
     return recipientEmail;
   }
 
-  public abstract String getNotificationBody(MessageSourceWrapper messageSource, String url);
+  public abstract String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator);
 
   public abstract String getNotificationSubject(MessageSourceWrapper messageSource);
 

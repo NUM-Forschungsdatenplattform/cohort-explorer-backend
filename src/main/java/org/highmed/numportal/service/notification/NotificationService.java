@@ -29,7 +29,7 @@ public class NotificationService {
     notifications.forEach(
         notification -> {
           String subject = notification.getNotificationSubject(messageSource);
-          String body = notification.getNotificationBody(messageSource, numProperties.getUrl());
+          String body = notification.getNotificationBody(messageSource, numProperties.getUrl(), numProperties.getOperator());
           String recipient = notification.getNotificationRecipient();
 
           if (StringUtils.isNotEmpty(body)

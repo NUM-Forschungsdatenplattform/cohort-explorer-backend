@@ -5,8 +5,6 @@ import org.highmed.numportal.service.notification.dto.Notification;
 
 import lombok.Builder;
 
-import java.time.Year;
-
 public class UserNameUpdateNotification extends Notification {
 
   private static final String PROFILE_UPDATE_SUBJECT = "mail.user-profile-update.subject";
@@ -27,13 +25,13 @@ public class UserNameUpdateNotification extends Notification {
   }
 
   @Override
-  public String getNotificationBody(MessageSourceWrapper messageSource, String url) {
-    String copyright = messageSource.getMessage(COPYRIGHT_KEY, Year.now());
+  public String getNotificationBody(MessageSourceWrapper messageSource, String url, String operator) {
+    String signOff = messageSource.getMessage(SIGN_OFF_KEY, operator);
     return messageSource.getMessage(
         PROFILE_UPDATE_BODY,
         recipientFirstName,
         recipientLastName,
-        copyright,
+        signOff,
         url,
         adminFullName,
         adminEmail);
