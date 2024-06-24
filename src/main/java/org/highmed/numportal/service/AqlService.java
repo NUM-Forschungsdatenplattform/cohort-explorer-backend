@@ -1,5 +1,8 @@
 package org.highmed.numportal.service;
 
+import org.highmed.numportal.domain.dto.aqleditor.aql.QueryValidationResponse;
+import org.highmed.numportal.domain.dto.aqleditor.aql.Result;
+import org.highmed.numportal.service.aqleditor.AqlEditorAqlService;
 import org.highmed.numportal.domain.dto.Language;
 import org.highmed.numportal.domain.dto.SearchCriteria;
 import org.highmed.numportal.domain.dto.SlimAqlDto;
@@ -23,9 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.ehrbase.aqleditor.dto.aql.QueryValidationResponse;
-import org.ehrbase.aqleditor.dto.aql.Result;
-import org.ehrbase.aqleditor.service.AqlEditorAqlService;
 import org.ehrbase.openehr.sdk.aql.parser.AqlParseException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;

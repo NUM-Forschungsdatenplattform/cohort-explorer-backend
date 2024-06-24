@@ -9,8 +9,8 @@ import org.highmed.numportal.service.util.AqlQueryConstants;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.ehrbase.aqleditor.dto.containment.ContainmentDto;
-import org.ehrbase.aqleditor.service.AqlEditorContainmentService;
+import org.highmed.numportal.domain.dto.aqleditor.containment.ContainmentDto;
+import org.highmed.numportal.service.aqleditor.AqlEditorContainmentService;
 import org.ehrbase.openehr.sdk.aql.dto.AqlQuery;
 import org.ehrbase.openehr.sdk.aql.dto.containment.ContainmentClassExpression;
 import org.ehrbase.openehr.sdk.aql.dto.operand.IdentifiedPath;

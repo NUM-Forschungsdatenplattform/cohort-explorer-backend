@@ -1,9 +1,9 @@
 package org.highmed.numportal.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ehrbase.aqleditor.dto.aql.QueryValidationResponse;
-import org.ehrbase.aqleditor.dto.aql.Result;
-import org.ehrbase.aqleditor.service.AqlEditorAqlService;
+import org.highmed.numportal.domain.dto.aqleditor.aql.QueryValidationResponse;
+import org.highmed.numportal.domain.dto.aqleditor.aql.Result;
+import org.highmed.numportal.service.aqleditor.AqlEditorAqlService;
 import org.highmed.numportal.service.exception.*;
 import org.junit.Assert;
 import org.junit.Before;
