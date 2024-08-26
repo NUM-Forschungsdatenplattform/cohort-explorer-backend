@@ -70,19 +70,17 @@ public class ContentServiceTest {
       CardDto.builder()
           .en(LocalizedPart.builder().title("Title 1").text("text 1").build())
           .de(LocalizedPart.builder().title("Title de 1").text("text de 1").build())
-          .imageId("image1")
           .url(new URL("http://test.test/"))
           .build();
   private CardDto card2 =
       CardDto.builder()
           .en(LocalizedPart.builder().title("Title 2").text("text 2").build())
           .de(LocalizedPart.builder().title("Title de 2").text("text de 2").build())
-          .imageId("image2")
           .url(new URL("http://test2.test/"))
           .build();
   private List<CardDto> cards = List.of(card1, card2);
   private String cardJson =
-      "[{\"en\":{\"title\":\"Title 1\",\"text\":\"text 1\"},\"de\":{\"title\":\"Title de 1\",\"text\":\"text de 1\"},\"imageId\":\"image1\",\"url\":\"http://test.test/\"},{\"en\":{\"title\":\"Title 2\",\"text\":\"text 2\"},\"de\":{\"title\":\"Title de 2\",\"text\":\"text de 2\"},\"imageId\":\"image2\",\"url\":\"http://test2.test/\"}]";
+      "[{\"en\":{\"title\":\"Title 1\",\"text\":\"text 1\"},\"de\":{\"title\":\"Title de 1\",\"text\":\"text de 1\"},\"url\":\"http://test.test/\"},{\"en\":{\"title\":\"Title 2\",\"text\":\"text 2\"},\"de\":{\"title\":\"Title de 2\",\"text\":\"text de 2\"},\"url\":\"http://test2.test/\"}]";
 
   public ContentServiceTest() throws MalformedURLException {}
 

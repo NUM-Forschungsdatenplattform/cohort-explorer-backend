@@ -24,9 +24,6 @@ public class CardDto {
   @Schema(description = "The german content of the card")
   @NotNull
   private LocalizedPart de;
-  @Schema(description = "The id of image of the card", example = "image-4")
-  @NotBlank
-  private String imageId;
   @Schema(description = "The URL of the card", example = "https://www.highmed.org/")
   private URL url;
 
@@ -36,7 +33,7 @@ public class CardDto {
   @AllArgsConstructor
   public static class LocalizedPart {
 
-    @Schema(description = "The localized title of the card", example = "image-4")
+    @Schema(description = "The localized title of the card")
     @NotBlank
     @Size(min = 1, max = 65)
     private String title;
