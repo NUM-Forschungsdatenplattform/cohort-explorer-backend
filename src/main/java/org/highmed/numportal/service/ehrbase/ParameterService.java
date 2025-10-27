@@ -212,11 +212,14 @@ public class ParameterService {
     from.setIdentifier(AqlQueryConstants.EHR_CONTAINMENT_IDENTIFIER);
 
     // generate contains expression
+    ContainmentClassExpression outerContains = new ContainmentClassExpression();
     ContainmentClassExpression contains = new ContainmentClassExpression();
     contains.setType(StringUtils.substringBetween(archetypeId, "openEHR-EHR-", "."));
     contains.setIdentifier("c0" + "[" + archetypeId + "]");
+    outerContains.setType("COMPOSITION");
+    outerContains.setContains(contains);
 
-    from.setContains(contains);
+    from.setContains(outerContains);
 
     List<OrderByExpression> orderByList = new LinkedList<>();
     aql.setSelect(selectClause);
