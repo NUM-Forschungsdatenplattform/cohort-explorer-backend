@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.highmed.numportal.domain.templates.ExceptionsTemplate.AN_ERROR_HAS_OCCURRED_CANNOT_EXECUTE_AQL;
@@ -61,6 +62,7 @@ public class EhrBaseService {
   private static final String PATH = "path";
   private static final String PSEUDONYM = "pseudonym";
   private static final String EXTERNAL_REF_ID_VALUE = "/subject/external_ref/id/value";
+  private static final Pattern LIMIT = Pattern.compile("LIMIT\\s+\\d+", Pattern.CASE_INSENSITIVE);
 
   private final DefaultRestClient restClient;
   private final CompositionResponseDataBuilder compositionResponseDataBuilder;
@@ -174,6 +176,11 @@ public class EhrBaseService {
   public List<QueryResponseData> executeRawQuery(AqlQuery aqlDto, Long projectId) {
 
     addSelectSecondlevelPseudonyms(aqlDto);
+
+    if (ehrBaseProperties.getLimit() != null && aqlDto.getLimit() == null) {
+      aqlDto.setLimit(ehrBaseProperties.getLimit());
+    }
+
     String query = AqlRenderer.render(aqlDto);
 
     try {
@@ -200,6 +207,10 @@ public class EhrBaseService {
   }
 
   public QueryResponseData executePlainQuery(String queryString) {
+
+    if (ehrBaseProperties.getLimit() != null && !LIMIT.matcher(queryString).matches()) {
+      queryString += " LIMIT " + ehrBaseProperties.getLimit();
+    }
 
     NativeQuery<Record> query = Query.buildNativeQuery(queryString);
 
