@@ -384,12 +384,6 @@ public class OrganizationServiceTest {
     verify(organizationRepository, times(0)).findAll(Mockito.any(OrganizationSpecification.class), Mockito.eq(pageable));
   }
 
-  @Test
-  public void shouldCountOrganizations() {
-    organizationService.countOrganizations();
-    verify(organizationRepository, times(1)).count();
-  }
-
   @Test(expected = BadRequestException.class)
   public void shouldHandleInvalidSortWhenGetAllOrganizationWithPagination() {
     Pageable pageable = PageRequest.of(0,50);

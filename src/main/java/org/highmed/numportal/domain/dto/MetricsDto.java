@@ -18,7 +18,4 @@ public class MetricsDto {
 
   @Schema(description = "Number of projects")
   private long projects;
-
-  @Schema(description = "Number of organizations")
-  private long organizations;
 }

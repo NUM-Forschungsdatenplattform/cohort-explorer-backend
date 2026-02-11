@@ -84,7 +84,7 @@ public class ContentService {
   }
 
   /**
-   * Computes platform metrics, number of projects, number of organizations and number of aqls
+   * Computes platform metrics: number of projects and number of aqls
    *
    * @return the metrics
    */
@@ -92,7 +92,6 @@ public class ContentService {
     return MetricsDto.builder()
                      .aqls(aqlService.countAqls())
                      .projects(projectService.countProjects())
-                     .organizations(organizationService.countOrganizations())
                      .build();
   }
 

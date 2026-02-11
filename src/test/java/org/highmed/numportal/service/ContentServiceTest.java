@@ -211,11 +211,9 @@ public class ContentServiceTest {
   public void shouldGetMetrics() {
     Mockito.when(aqlService.countAqls()).thenReturn(50L);
     Mockito.when(projectService.countProjects()).thenReturn(100L);
-    Mockito.when(organizationService.countOrganizations()).thenReturn(12L);
     MetricsDto respone = contentService.getMetrics();
     assertEquals(50L, respone.getAqls());
     assertEquals(100L, respone.getProjects());
-    assertEquals(12, respone.getOrganizations());
   }
 
   @Test
