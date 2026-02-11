@@ -8,7 +8,7 @@ import org.testcontainers.containers.GenericContainer;
  */
 @Slf4j
 public class ClamAVContainer extends GenericContainer<ClamAVContainer>{
-    private static final String IMAGE_VERSION = "clamav/clamav:1.2";
+    private static final String IMAGE_VERSION = "clamav/clamav:1.5";
     private static ClamAVContainer container;
 
     private ClamAVContainer(String image) {
