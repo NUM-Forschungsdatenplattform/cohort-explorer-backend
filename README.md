@@ -1,8 +1,11 @@
-# Num-portal
-The num-portal repository includes the backend for the Routine Data Platform (RDP). 
+# Cohort Explorer – Backend
+
+This repository contains the backend and Docker files for the Cohort Explorer.
+
+Cohort Explorer is a web application to explore and visualize cohorts by using an openEHR clinical data repository.
 
 ## Building and running locally
-To get the backend running first a postgres instance needs to be running.
+To start the backend, a PostgreSQL database is required.
 
 To start a local instance of PostgreSQL:
 
@@ -26,10 +29,9 @@ http://localhost:8090/swagger-ui/index.html
 
 Pull requests are welcome.
 For major changes, please open an issue first to discuss what you would like to change.
-After that and the approval of HiGHmed e.V. (rdp-support@highmed.org) you can add the code in a Branch. 
 1. Create a branch named 'feature/name-of-branch' because of pipeline requirements
-2. Check you code with our provided [checkstyle](/.config/checkstyle.xml)
-3. Update the previously tests
+2. Check your code with our provided [checkstyle](/.config/checkstyle.xml)
+3. Update existing tests if necessary and add new tests for your changes
 4. PRs can only be merged once the [build_for_development pipeline](/.github/workflows/build-for-development.yml) has been successfully completed
 
 ### Checkstyle 
