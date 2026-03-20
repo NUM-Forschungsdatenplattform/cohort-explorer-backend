@@ -18,9 +18,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.highmed.numportal.domain.templates.ExceptionsTemplate.COULDN_T_PARSE_CARD;
@@ -35,24 +33,11 @@ public class ContentService {
   public static final String LIST_CLINICS =
       "SELECT distinct c/context/health_care_facility/name as health_care_facility FROM EHR e CONTAINS COMPOSITION c";
   private static final int PROJECT_COUNT = 5;
-  private static final int SOFA_MIN = 0;
-  private static final int SOFA_MAX = 24;
-  private static final int SOFA_INTERVAL_LEN = 5;
-  private static final String GET_CLINIC_SOFA_AVG =
-      "SELECT avg(r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude) as sofa_avg "
-          + "FROM EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION r[openEHR-EHR-OBSERVATION.sofa_score.v0] "
-          + "WHERE c/context/health_care_facility/name = '%s'";
-  private static final String GET_CLINIC_SOFA_COUNT_IN_INTERVAL =
-      "SELECT count(r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude) as sofa_score "
-          + "FROM EHR e CONTAINS COMPOSITION c CONTAINS OBSERVATION r[openEHR-EHR-OBSERVATION.sofa_score.v0] "
-          + "WHERE r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude >= %d "
-          + "AND r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude <= %d "
-          + "AND c/context/health_care_facility/name = '%s'";
+
   private final ContentItemRepository contentItemRepository;
   private final ObjectMapper mapper;
   private final ProjectService projectService;
   private final AqlService aqlService;
-  private final OrganizationService organizationService;
   private final EhrBaseService ehrBaseService;
   private final UserDetailsService userDetailsService;
 
@@ -62,14 +47,12 @@ public class ContentService {
       ObjectMapper mapper,
       @Lazy ProjectService projectService,
       AqlService aqlService,
-      OrganizationService organizationService,
       EhrBaseService ehrBaseService,
       UserDetailsService userDetailsService) {
     this.contentItemRepository = contentItemRepository;
     this.mapper = mapper;
     this.projectService = projectService;
     this.aqlService = aqlService;
-    this.organizationService = organizationService;
     this.ehrBaseService = ehrBaseService;
     this.userDetailsService = userDetailsService;
   }
@@ -174,40 +157,5 @@ public class ContentService {
     return responseData.getRows().stream()
                        .map(row -> (String) row.get(0))
                        .collect(Collectors.toList());
-  }
-
-  public Map<String, Integer> getClinicDistributions(String name) {
-    Map<String, Integer> distributions = new LinkedHashMap<>();
-    for (int i = SOFA_MIN; i < SOFA_MAX; i += SOFA_INTERVAL_LEN) {
-      int end = i + SOFA_INTERVAL_LEN - 1;
-      String interval = i + "-" + end;
-      QueryResponseData queryResponseData =
-          ehrBaseService.executePlainQuery(
-              String.format(GET_CLINIC_SOFA_COUNT_IN_INTERVAL, i, end, name));
-      List<List<Object>> rows = queryResponseData.getRows();
-      if (rows.size() == 1 && rows.get(0).size() == 1 && rows.get(0).get(0) != null) {
-        distributions.put(interval, (Integer) rows.get(0).get(0));
-      } else {
-        distributions.put(interval, 0);
-      }
-    }
-    return distributions;
-  }
-
-  public Map<String, Double> getClinicAverages(String loggedInUserId) {
-    userDetailsService.checkIsUserApproved(loggedInUserId);
-    Map<String, Double> averages = new LinkedHashMap<>();
-    List<String> clinics = getClinics(loggedInUserId);
-    for (String clinic : clinics) {
-      QueryResponseData queryResponseData =
-          ehrBaseService.executePlainQuery(String.format(GET_CLINIC_SOFA_AVG, clinic));
-      List<List<Object>> rows = queryResponseData.getRows();
-      if (rows.size() == 1 && rows.get(0).size() == 1 && rows.get(0).get(0) != null) {
-        averages.put(clinic, (Double) rows.get(0).get(0));
-      } else {
-        averages.put(clinic, 0.0);
-      }
-    }
-    return averages;
   }
 }

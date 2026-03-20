@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.util.Strings;
 import org.ehrbase.openehr.sdk.response.dto.QueryResponseData;
-import org.highmed.numportal.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -30,7 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.highmed.numportal.domain.templates.ExceptionsTemplate.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -46,9 +44,6 @@ public class ContentServiceTest {
 
   @Mock
   private AqlService aqlService;
-
-  @Mock
-  private OrganizationService organizationService;
 
   @Mock
   private UserDetailsService userDetailsService;
@@ -219,33 +214,6 @@ public class ContentServiceTest {
     mockGetClinicsData();
     List<String> clinics = contentService.getClinics("approvedUserId");
     assertEquals(2, clinics.size());
-  }
-
-  @Test
-  public void shouldGetClinicDistributions() {
-    QueryResponseData responseData = new QueryResponseData();
-    responseData.setColumns(
-            new ArrayList<>(List.of(Map.of("path", "/count(r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude)"),
-                    Map.of("name", "sofa_score"))));
-    responseData.setRows(List.of(new ArrayList<>(List.of(25))));
-    Mockito.when(ehrBaseService.executePlainQuery(Mockito.contains("openEHR-EHR-OBSERVATION.sofa_score.v0"))).thenReturn(responseData);
-    Map<String, Integer> distribution = contentService.getClinicDistributions("dummy clinic");
-    assertTrue(distribution.containsKey("0-4"));
-    assertEquals(25, distribution.get("0-4"));
-  }
-
-  @Test
-  public void shouldGetClinicAverages() {
-    QueryResponseData responseData = new QueryResponseData();
-    responseData.setColumns(
-            new ArrayList<>(List.of(Map.of("path", "/avg(r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude)"),
-                    Map.of("name", "sofa_avg"))));
-    responseData.setRows(List.of(new ArrayList<>(List.of(12.33))));
-    Mockito.when(ehrBaseService.executePlainQuery(Mockito.contains("avg(r/data[at0001]/events[at0002]/data[at0003]/items[at0041]/value/magnitude) as sofa_avg"))).thenReturn(responseData);
-    mockGetClinicsData();
-    Map<String, Double> clinicAverages = contentService.getClinicAverages("approvedUserId");
-    assertTrue(clinicAverages.containsKey("Hospital"));
-    assertEquals(12.33, clinicAverages.get("Hospital"));
   }
 
   private void mockGetClinicsData () {
