@@ -2,18 +2,16 @@ package org.highmed.numportal.service.executors;
 
 import org.highmed.numportal.domain.model.Cohort;
 import org.highmed.numportal.domain.model.CohortGroup;
-import org.highmed.numportal.domain.model.Type;
 import org.highmed.numportal.service.ehrbase.EhrBaseService;
 import org.highmed.numportal.service.exception.IllegalArgumentException;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.SetUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.highmed.numportal.domain.templates.ExceptionsTemplate.CANNOT_EXECUTE_AN_EMPTY_COHORT;
 
@@ -22,7 +20,7 @@ import static org.highmed.numportal.domain.templates.ExceptionsTemplate.CANNOT_E
 @AllArgsConstructor
 public class CohortExecutor {
 
-  private final SetOperationsService setOperations;
+  private final AqlCombiner aqlCombiner;
 
   private final AqlExecutor aqlExecutor;
 
@@ -34,25 +32,33 @@ public class CohortExecutor {
       throw new IllegalArgumentException(CohortExecutor.class, CANNOT_EXECUTE_AN_EMPTY_COHORT);
     }
 
-    return executeGroup(cohort.getCohortGroup(), allowUsageOutsideEu);
+    return executePatientIds(cohort.getCohortGroup(), allowUsageOutsideEu);
   }
 
-  public Set<String> executeGroup(CohortGroup cohortGroup, Boolean allowUsageOutsideEu) {
-    if (cohortGroup.getType() == Type.GROUP) {
-
-      List<Set<String>> sets =
-          cohortGroup.getChildren().stream()
-                     .map(e -> executeGroup(e, allowUsageOutsideEu))
-                     .collect(Collectors.toList());
-
-      return setOperations.apply(
-          cohortGroup.getOperator(), sets, ehrBaseService.getAllPatientIds());
-
-    } else if (cohortGroup.getType() == Type.AQL) {
-      return aqlExecutor.execute(
-          cohortGroup.getQuery(), cohortGroup.getParameters(), allowUsageOutsideEu);
+  public Set<String> executePatientIds(CohortGroup cohortGroup, Boolean allowUsageOutsideEu) {
+    var aqlWithParams = aqlCombiner.combineQuery(cohortGroup);
+    var query = aqlExecutor.prepareQuery(aqlWithParams, allowUsageOutsideEu);
+    if (query == null) {
+      return Set.of();
     }
+    return ehrBaseService.retrieveEligiblePatientIds(query);
+  }
 
-    return SetUtils.emptySet();
+  public long executeNumberOfPatients(CohortGroup cohortGroup, Boolean allowUsageOutsideEu) {
+    var aqlWithParams = aqlCombiner.combineQuery(cohortGroup);
+    var query = aqlExecutor.prepareQuery(aqlWithParams, allowUsageOutsideEu);
+    if (query == null) {
+      return 0L;
+    }
+    return ehrBaseService.retrieveNumberOfPatients(query);
+  }
+
+  public Map<String, Integer> executeNumberOfPatientsPerPath(CohortGroup cohortGroup, Boolean allowUsageOutsideEu, String path, List<String> values) {
+    var aqlWithParams = aqlCombiner.combineQuery(cohortGroup);
+    var query = aqlExecutor.prepareQuery(aqlWithParams, allowUsageOutsideEu);
+    if (query == null) {
+      return Map.of();
+    }
+    return ehrBaseService.retrieveNumberOfPatientsPerPath(query, path, values);
   }
 }

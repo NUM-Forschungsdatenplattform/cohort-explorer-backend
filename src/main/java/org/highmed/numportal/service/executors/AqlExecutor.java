@@ -1,19 +1,15 @@
 package org.highmed.numportal.service.executors;
 
-import org.highmed.numportal.domain.model.CohortAql;
 import org.highmed.numportal.properties.ConsentProperties;
-import org.highmed.numportal.service.ehrbase.EhrBaseService;
 import org.highmed.numportal.service.policy.EuropeanConsentPolicy;
 import org.highmed.numportal.service.policy.ProjectPolicyService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ehrbase.openehr.sdk.aql.dto.AqlQuery;
-import org.ehrbase.openehr.sdk.aql.parser.AqlQueryParser;
 import org.ehrbase.openehr.sdk.aql.render.AqlRenderer;
 import org.ehrbase.openehr.sdk.aql.util.AqlUtil;
 import org.ehrbase.openehr.sdk.generator.commons.aql.parameter.ParameterValue;
@@ -23,38 +19,35 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class AqlExecutor {
 
-  private final EhrBaseService ehrBaseService;
-
   private final ProjectPolicyService projectPolicyService;
 
   private final ConsentProperties consentProperties;
 
-  public Set<String> execute(
-      CohortAql aql, Map<String, Object> parameters, Boolean allowUsageOutsideEu) {
+  public String prepareQuery(AqlWithParams aqlWithParams, Boolean allowUsageOutsideEu) {
 
-    if (aql != null && StringUtils.isNotEmpty(aql.getQuery())) {
+    if (aqlWithParams != null && aqlWithParams.aqlQuery != null) {
       if (BooleanUtils.isTrue(allowUsageOutsideEu) || allowUsageOutsideEu == null) {
-        applyPolicy(aql);
+        applyPolicy(aqlWithParams);
       }
 
-      String query = removeNullParameters(parameters, aql.getQuery());
-      query = addParameters(parameters, query);
+      String query = AqlRenderer.render(aqlWithParams.getAqlQuery());
+      query = removeNullParameters(aqlWithParams.parameters, query);
+      query = addParameters(aqlWithParams.parameters, query);
 
-      return ehrBaseService.retrieveEligiblePatientIds(query);
+      return query;
     } else {
-      return SetUtils.emptySet();
+      return null;
     }
   }
 
-  private void applyPolicy(CohortAql cohortAql) {
-    AqlQuery aql = AqlQueryParser.parse(cohortAql.getQuery());
+  private void applyPolicy(AqlWithParams aqlWithParams) {
+    AqlQuery aql = aqlWithParams.aqlQuery;
     projectPolicyService.apply(
         aql,
         List.of(
@@ -62,7 +55,7 @@ public class AqlExecutor {
                                  .oid(consentProperties.getAllowUsageOutsideEuOid())
                                  .build()));
 
-    cohortAql.setQuery(AqlRenderer.render(aql));
+    aqlWithParams.aqlQuery = aql;
   }
 
   private String addParameters(Map<String, Object> parameters, String query) {
